@@ -49,11 +49,11 @@ class User(UserMixin, db.Model):
         query = self.following.select().where(User.id == user.id)
         return db.session.scalar(query) is not None
     
-    def followers_count(self, user):
+    def followers_count(self):
         query = sa.select(sa.func.count()).select_from(self.followers.select().subquery())
         return db.session.scalar(query)
     
-    def following_count(self, user):
+    def following_count(self):
         query = sa.select(sa.func.count()).select_from(self.following.select().subquery())
         return db.session.scalar(query)
     
@@ -66,8 +66,9 @@ class User(UserMixin, db.Model):
             .join(Author.followers.of_type(Follower), isouter=True)
             .where(sa.or_(
                 Follower.id == self.id,
-                Author.id == self.id
+                Author.id == self.id,
             ))
+            .group_by(Post)
             .order_by(Post.timestamp.desc())
         )
     
