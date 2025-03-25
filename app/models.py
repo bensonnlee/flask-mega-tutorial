@@ -57,6 +57,20 @@ class User(UserMixin, db.Model):
         query = sa.select(sa.func.count()).select_from(self.following.select().subquery())
         return db.session.scalar(query)
     
+    def following_posts(self):
+        Author = so.aliased(User)
+        Follower = so.aliased(User)
+        return (
+            sa.select(Post)
+            .join(Post.author.of_type(Author))
+            .join(Author.followers.of_type(Follower), isouter=True)
+            .where(sa.or_(
+                Follower.id == self.id,
+                Author.id == self.id
+            ))
+            .order_by(Post.timestamp.desc())
+        )
+    
     def __repr__(self):
         return '<User {}>'.format(self.username)
     
