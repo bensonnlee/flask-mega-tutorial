@@ -19,3 +19,5 @@ class Config:
     LANGUAGES = ['en', 'es']
     MS_TRANSLATOR_KEY = os.environ.get('MS_TRANSLATOR_KEY')
     POSTS_PER_PAGE = 25
+
+    LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
