@@ -2,7 +2,7 @@ FROM python:3.11-slim
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
-RUN pip install gunicorn
+RUN pip install gunicorn pymysql cryptography
 
 COPY app app
 COPY migrations migrations
